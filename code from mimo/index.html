@@ -1,0 +1,185 @@
+<!doctype html>
+<html> 
+  <head>
+    <title>Catsama1337</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <p> Hello world !!! </p>
+    <h1><strong><em>Welcome to my kingdow</em></strong></h1><br>
+
+  <ol>
+    <li class="gray-element"> open the laptop</li>
+    <li> login to mimo</li>
+    <li class="gray-element"> start to learn </li>
+  </ol>
+<br>
+
+
+
+
+    
+<a href=" https://www.chess.com/"> how to be a supergrandmaster </a><br>
+<br>
+<br>
+<br>
+<br>
+<p align="center">Are you looking for a way to use Microsoft's free license? 
+ <br></p>
+ <br>
+.                                                                                       <p id="capital-letter" align="center">!!!HERE!!!</p>
+<br>
+<br>
+<p align="center"><img src="https://github.com/Catsama1337/image/blob/main/LOGOcat.png?raw=true" alt="MAS Logo" height="128"></p>
+
+<h1 align="center">Microsoft  Activation  Scripts (MAS)</h1>
+
+<p align="center">A Windows and Office activator using HWID / Ohook / KMS38 / Online KMS activation methods, with a focus on open-source code and fewer antivirus detections.</p>
+<hr>
+
+### Note: HWID Activation is working again with a new method.<br>
+<br>
+## Download / How to use it?<br>
+<br>
+# Method 1 - PowerShell (Recommended)<br>
+<hr>
+
+# Check massgrave.dev for more details<br>
+<br>
+<body>write-host<br>
+Write-Host "The current command (irm https://massgrave.dev/get | iex) will be retired in the future."<br>
+Write-Host -ForegroundColor Green "Use the new command (irm https://get.activated.win | iex) moving forward."<br>
+write-host<br>
+
+$troubleshoot = 'https://massgrave.dev/troubleshoot'<br>
+if ($ExecutionContext.SessionState.LanguageMode.value__ -ne 0) {<br>
+    $ExecutionContext.SessionState.LanguageMode<br>
+    Write-Host "Windows PowerShell is not running in Full Language Mode."<br>
+    Write-Host "Help - https://gravesoft.dev/fix_powershell" -ForegroundColor White -BackgroundColor Blue<br>
+    return<br>
+}<br>
+
+function Check3rdAV {<br>
+    $avList = Get-CimInstance -Namespace root\SecurityCenter2 -Class AntiVirusProduct | Where-Object { $_.displayName -notlike '*windows*' } | Select-Object -ExpandProperty displayName<br>
+    if ($avList) {<br>
+        Write-Host '3rd party Antivirus might be blocking the script - ' -ForegroundColor White -BackgroundColor Blue -NoNewline<br>
+        Write-Host " $($avList -join ', ')" -ForegroundColor DarkRed -BackgroundColor White<br>
+          }<br>
+}<br>
+
+function CheckFile {<br>
+    param ([string]$FilePath)<br>
+    if (-not (Test-Path $FilePath)) { <br>
+        Check3rdAV<br>
+        Write-Host "Failed to create MAS file in temp folder, aborting!"<br>
+        Write-Host "Help - $troubleshoot" -ForegroundColorWhite-BackgroundColor Blue<br>
+        throw<br>
+    }<br>
+}<br>
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12<br>
+$URLs = @(<br>
+    'https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/4e702068bea2cd5372904389ac687c75bc13223f/MAS/All-In-One-Version-KL/MAS_AIO.cmd',<br>
+    'https://dev.azure.com/massgrave/Microsoft-Activation-Scripts/_apis/git/repositories/Microsoft-Activation-Scripts/items?path=/MAS/All-In-One-Version-KL/MAS_AIO.cmd&versionType=Commit&version=4e702068bea2cd5372904389ac687c75bc13223f',<br>
+    'https://git.activated.win/massgrave/Microsoft-Activation-Scripts/raw/commit/4e702068bea2cd5372904389ac687c75bc13223f/MAS/All-In-One-Version-KL/MAS_AIO.cmd'<br>
+)<br>
+
+foreach ($URL in $URLs | Sort-Object { Get-Random }) {<br>
+    try { $response = Invoke-WebRequest -Uri $URL -UseBasicParsing; break } catch {}<br>
+}<br>
+
+if (-not $response) {<br>
+    Check3rdAV<br>
+    Write-Host "Failed to retrieve MAS from any of the available repositories, aborting!"<br>
+    Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue<br>
+    return<br>
+}<br>
+
+# Verify script integrity<br>
+$releaseHash = '000DB2C899D009AFAFC19CF04A9BF5381F5520CB21395A29B0DB57483FA7A909'<br>
+$stream = New-Object IO.MemoryStream<br>
+$writer = New-Object IO.StreamWriter $stream<br>
+$writer.Write($response)<br>
+$writer.Flush()<br>
+$stream.Position = 0<br>
+$hash = [BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash($stream)) -replace '-'<br>
+if ($hash -ne $releaseHash) {<br>
+    Write-Warning "Hash ($hash) mismatch, aborting!`nReport this issue at $troubleshoot"<br>
+    $response = $null<br>
+    return<br>
+}<br>
+
+# Check for AutoRun registry which may create issues with CMD<br>
+$paths = "HKCU:\SOFTWARE\Microsoft\Command Processor", "HKLM:\SOFTWARE\Microsoft\Command Processor"<br>
+foreach ($path in $paths) {<br>
+    if (Get-ItemProperty -Path $path -Name "Autorun" -ErrorAction SilentlyContinue) {<br>
+        Write-Warning "Autorun registry found, CMD may crash! `nManually copy-paste the below command to fix...`nRemove-ItemProperty -Path '$path' -Name 'Autorun'"<br>
+    }<br>
+}<br>
+
+$rand = [Guid]::NewGuid().Guid<br>
+$isAdmin = [bool]([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544')<br>
+$FilePath = if ($isAdmin) { "$env:SystemRoot\Temp\MAS_$rand.cmd" } else { "$env:USERPROFILE\AppData\Local\Temp\MAS_$rand.cmd" }<br>
+Set-Content -Path $FilePath -Value "@::: $rand `r`n$response"<br>
+CheckFile $FilePath<br>
+
+$env:ComSpec = "$env:SystemRoot\system32\cmd.exe"<br>
+$chkcmd = & $env:ComSpec /c "echo CMD is working"<br>
+if ($chkcmd -notcontains "CMD is working") {<br>
+    Write-Warning "cmd.exe is not working.`nReport this issue at $troubleshoot"<br>
+}<br>
+saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" $args""" -Wait<br>
+CheckFile $FilePath<br>
+
+$FilePaths = @("$env:SystemRoot\Temp\MAS*.cmd", "$env:USERPROFILE\AppData\Local\Temp\MAS*.cmd")<br>
+foreach ($FilePath in $FilePaths) { Get-Item $FilePath | Remove-Item }<br>
+</body>
+
+
+<br>
+<br>
+<a href="https://massgrave.dev/get.ps1">HEY,what are you looking at?</a>
+<br>
+
+<p align="center">Made with Love ❤️</p>
+
+
+<br>
+<br>
+<br>
+
+
+    <strong><em>this is the code hacking dino game</em></strong><br>
+<br>
+<br>
+Runner.instance_.playingIntro = false;
+Runner.instance_.startGame();
+var original = Runner.prototype.gameOver;
+Runner.prototype.gameOver = function() {};
+setInterval(() => {
+    if (Runner.instance_.tRex.jumping) return;
+    const obstacles = Runner.instance_.horizon.obstacles;
+    if (obstacles.length > 0) {
+        const obstacle = obstacles[0];
+        if (obstacle.xPos < 100 && obstacle.yPos > 75) {
+            Runner.instance_.tRex.startJump(1);
+        }
+    }
+}, 10);<br>
+<br>
+<br>
+
+    <script src="script.js"></script>
+    <a href="https://hentaiz.cfd/"> please dont't click here</a>
+<br>
+<br>
+<br>
+
+<button id="learnMoreBtn">Learn More</button>
+<br>
+<br>
+<img src="https://images5.alphacoders.com/128/1284718.jpg" wdith="150" height="150">
+
+
+  </body>
+</html>
