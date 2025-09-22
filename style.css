@@ -1,38 +1,77 @@
 body {
-    font-family: sans-serif;
-    background-color:white;
+  font-family: sans-serif;
+
+  background: linear-gradient(135deg, #8ec5fc, #e0c3fc);
+}
+
+
+.bocchi{
+background-color:lightgray;
+}
+
+p{
+  color:black;
+  
+}
+
+
+
+h1 {
+color: rgb(241, 241, 184);
+border: solid 1px ;
+border-radius: 8px ;
+background: linear-gradient(135deg, #5b9df9, #7f66ff, #c084fc);
+
+}
+
+
+#learnMore{
+  ;
+}
+
+#p1{
+  color:blue; 
+}
+
+#p2{
+  color:blue;
+}
+
+#p3{
+  color:blue;
+}
+
+#p4{
+  color:blueviolet;
+}
+
+#p5{
+  color:blue;
+}
+
+#link1{
+  color:red;
   }
-  
-  
-  .gray-element{
-  background-color:lightgray;
+
+.logocat{
+  back-ground:white;
+}
+
+#MAS{
+  border: solid 1px;
+}
+
+
+
+
+#title{
+  text-align: center;
+}
+
+
+
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 14px;
   }
-  
-  p{
-    color:blue;
-  }
-  
-  
-  
-  h1 {
-  color: coral;
-  display: flex;
-  flex-direction: row;
-  background-color: purple ;
-  }
-  
-  
-  #learnMoreBtn{
-      background-color: #4CAF50; /* Green */
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-      font-weight:bold;
-  }
-  
+}
